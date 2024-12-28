@@ -17,7 +17,7 @@ def post_prompt(request):
         agent_name = body["agent"]
         client_prompt = body["prompt"]
 
-        agent = available_agents.get(agent_name)
+        agent = available_agents.get(agent_name)()
         if agent == None:
             return HttpResponseNotFound("Agent not found")
         
