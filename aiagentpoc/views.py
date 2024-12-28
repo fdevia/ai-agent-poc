@@ -27,9 +27,11 @@ def post_prompt(request):
         return JsonResponse({
             "agentResponse": suggested_response,
         })
+    
     except AuthenticationException as e:
         print("Auth error:", e)
         return HttpResponseForbidden("Forbidden")
+    
     except Exception as e:
         print("Error in handler:", e)
         return JsonResponse({
