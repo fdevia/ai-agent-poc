@@ -2,14 +2,18 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
 from aiagentpoc.agents.agents import available_agents
+from auth.simple_api_key import validate_simple_api_key, AuthenticationException
 import json
 
 
 @csrf_exempt
 def example_endpoint(request):
-    body = json.loads(request.body.decode('utf-8'))
     load_dotenv()
+
     try:
+        validate_simple_api_key(request)
+        
+        body = json.loads(request.body.decode('utf-8'))
         agent_name = body["agent"]
         client_prompt = body["prompt"]
 
@@ -25,9 +29,13 @@ def example_endpoint(request):
         return JsonResponse({
             "agentResponse": suggested_response,
         })
+    except AuthenticationException as e:
+        print("Auth error:", e)
+        return JsonResponse({
+            "error": "Unauthorized",
+        })
     except Exception as e:
-        print("Error in handler", e)
-        data = {
+        print("Error in handler:", e)
+        return JsonResponse({
             "agentResponse": "Lo siento, en este momento no me encuentro disponible. Intentalo de nuevo más tarde",
-        }
-        return JsonResponse(data)
+        })
