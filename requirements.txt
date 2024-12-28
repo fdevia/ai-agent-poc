@@ -10,7 +10,7 @@ Babel
 backcall
 bleach
 cachetools
-certifi.5
+certifi
 cffi
 chardet
 click
