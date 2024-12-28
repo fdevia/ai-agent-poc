@@ -19,6 +19,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('api/prompt', views.post_prompt, name='post_prompt'),
 ]
