@@ -35,7 +35,7 @@ groq==0.13.1
 grpcio==1.49.1
 gunicorn==23.0.0
 h11==0.14.0
-h5py==3.1.0
+h5py==3.12.1
 httpcore==1.0.7
 httpx==0.28.1
 idna==2.10
