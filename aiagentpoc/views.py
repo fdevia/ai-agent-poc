@@ -5,6 +5,11 @@ from aiagentpoc.agents.agents import available_agents
 from auth.simple_api_key import validate_simple_api_key, AuthenticationException
 import json
 
+def get_agent_response(agent, client_prompt):
+    agent_response = agent.run(client_prompt)
+    text_response = agent_response.messages[-1].content
+    return text_response
+
 
 @csrf_exempt
 def post_prompt(request):
@@ -21,11 +26,10 @@ def post_prompt(request):
         if agent == None:
             return HttpResponseNotFound("Agent not found")
         
-        agent_response = agent.run(client_prompt)
-        suggested_response = agent_response.messages[-1].content
+        agent_response = get_agent_response(agent, client_prompt)
 
         return JsonResponse({
-            "agentResponse": suggested_response,
+            "agentResponse": agent_response,
         })
     
     except AuthenticationException as e:

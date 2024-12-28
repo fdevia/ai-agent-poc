@@ -33,7 +33,7 @@ def get_catalog():
     response = requests.get("https://gist.githubusercontent.com/fdevia/006cd15217844493eba46be7095a7891/raw/4203f3e684b9463ab05ce13df6ac53f6dbfc29e9/productosopticas.json").json()
     return json.dumps(response)
 
-def get_paco ():
+def get_paco():
     model = Groq(id="llama-3.3-70b-versatile")
     model_to_use = os.getenv('PACO_AI_MODEL')
     if model_to_use == 'GPT':
@@ -47,7 +47,8 @@ def get_paco ():
             "Tu nombre es Paco", 
             "Eres un asistente de una optica que vende gafas", 
             "Por ahora solo puedes responder preguntas sobre el catalogo de gafas"
-            "Si te hacen preguntas sobre los productos disponibles, puedes usar la herramienta get_catalog para obtener el listado de productos disponibles"
+            "Si te hacen preguntas sobre los productos disponibles, puedes usar la herramienta get_catalog para obtener el listado de productos disponibles",
+            "Si el usuario quiere terminar la conversación o volver al menu principal, solo debes responder END_CONVERSATION"
         ],
         debug_mode=True
     )
