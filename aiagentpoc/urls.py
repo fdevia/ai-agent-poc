@@ -20,5 +20,5 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/example/', views.example_endpoint, name='example_endpoint'),
+    path('api/prompt', views.post_prompt, name='post_prompt'),
 ]
