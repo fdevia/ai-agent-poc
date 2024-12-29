@@ -123,3 +123,4 @@ webencodings
 Werkzeug
 wrapt
 groq
+openai
