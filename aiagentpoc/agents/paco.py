@@ -1,10 +1,12 @@
 
 import json
 import requests
-from phi.agent import Agent
+from phi.agent import Agent, AgentMemory
 from phi.model.groq import Groq
 from phi.model.openai import OpenAIChat
 import os
+from phi.storage.agent.sqlite import SqlAgentStorage
+from phi.memory.db.sqlite import SqliteMemoryDb
 
 """
 Returns a list of product dictionaries.
@@ -33,15 +35,18 @@ def get_catalog():
     response = requests.get("https://gist.githubusercontent.com/fdevia/006cd15217844493eba46be7095a7891/raw/4203f3e684b9463ab05ce13df6ac53f6dbfc29e9/productosopticas.json").json()
     return json.dumps(response)
 
-def get_paco():
+def get_paco(client_id):
     model = Groq(id="llama-3.3-70b-versatile")
     model_to_use = os.getenv('PACO_AI_MODEL')
     if model_to_use == 'GPT':
         model = OpenAIChat(id="gpt-4o-mini")
     return Agent(
+        # Basic config
         model=model,
-        tools=[get_catalog],
         show_tool_calls=True,
+        debug_mode=True,
+        # Training config
+        tools=[get_catalog],
         instructions= [
             "Responder en español", 
             "Tu nombre es Paco", 
@@ -50,5 +55,12 @@ def get_paco():
             "Si te hacen preguntas sobre los productos disponibles, puedes usar la herramienta get_catalog para obtener el listado de productos disponibles",
             "Si el usuario quiere terminar la conversación o volver al menu principal, solo debes responder END_CONVERSATION"
         ],
-        debug_mode=True
+        # Memory config
+        storage= SqlAgentStorage(table_name="agent_sessions", db_file="tmp/agent_storage.db"),
+        memory=AgentMemory(
+            db=SqliteMemoryDb(table_name="agent_memory", db_file="tmp/agent_storage.db"), create_user_memories=True, create_session_summary=True
+        ),
+        session_id=client_id,
+        add_history_to_messages=True,
+        num_history_responses=3
     )
