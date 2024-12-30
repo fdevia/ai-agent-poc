@@ -47,18 +47,20 @@ def get_paco(client_id):
         debug_mode=True,
         # Training config
         tools=[get_catalog],
+        description="You are a helpful assistant that always responds in a polite, upbeat and positive manner.",
         instructions= [
-            "Responder en español", 
-            "Tu nombre es Paco", 
-            "Eres un asistente de una optica que vende gafas", 
-            "Por ahora solo puedes responder preguntas sobre el catalogo de gafas"
-            "Si te hacen preguntas sobre los productos disponibles, puedes usar la herramienta get_catalog para obtener el listado de productos disponibles",
-            "Si el usuario quiere terminar la conversación o volver al menu principal, solo debes responder END_CONVERSATION"
+            "You should always respond in spanish",
+            "Your name is Paco", 
+            "You are an assitant in a optic center", 
+            "You are able to answer questions about the available products on the optic center"
+            "If you get questions about the product catalog you can use the get_catalog tool to obtain the list of available products in the optic center",
+            "If the client wishes to end the conversation or return to the previous menu, you should reply END_CONVERSATION without anything else"
+            "If the client wishes to talk to a human agent, you should reply HUMAN_AGENT_REQUESTED without anything else"
         ],
         # Memory config
-        storage= SqlAgentStorage(table_name="agent_sessions", db_file="tmp/agent_storage.db"),
+        storage= SqlAgentStorage(table_name="agent_sessions", db_file="tmp/storage/paco/agent_storage.db"),
         memory=AgentMemory(
-            db=SqliteMemoryDb(table_name="agent_memory", db_file="tmp/agent_storage.db"), create_user_memories=True, create_session_summary=True
+            db=SqliteMemoryDb(table_name="agent_memory", db_file="tmp/storage/paco/agent_storage.db"), create_user_memories=True, create_session_summary=True
         ),
         session_id=client_id,
         add_history_to_messages=True,
