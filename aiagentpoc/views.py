@@ -23,10 +23,11 @@ def post_prompt(request):
         client_prompt = body["prompt"]
         client_id = body["clientId"]
 
-        agent = available_agents.get(agent_name)(client_id)
-        if agent == None:
+        agent_constructor = available_agents.get(agent_name)
+        if agent_constructor == None:
             return HttpResponseNotFound("Agent not found")
         
+        agent = agent_constructor(client_id)
         agent_response = get_agent_response(agent, client_prompt)
 
         return JsonResponse({

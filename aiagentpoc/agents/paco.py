@@ -35,11 +35,17 @@ def get_catalog():
     response = requests.get("https://gist.githubusercontent.com/fdevia/006cd15217844493eba46be7095a7891/raw/4203f3e684b9463ab05ce13df6ac53f6dbfc29e9/productosopticas.json").json()
     return json.dumps(response)
 
-def get_paco(client_id):
+def define_agent():
     model = Groq(id="llama-3.3-70b-versatile")
     model_to_use = os.getenv('PACO_AI_MODEL')
     if model_to_use == 'GPT':
         model = OpenAIChat(id="gpt-4o-mini")
+    return model
+
+
+def get_paco(client_id):
+    model = define_agent()
+
     return Agent(
         # Basic config
         model=model,
