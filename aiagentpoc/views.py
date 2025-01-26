@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from aiagentpoc.agents.agents import available_agents
 from auth.simple_api_key import validate_simple_api_key, AuthenticationException
 import json
+import traceback
 
 def get_agent_response(agent, client_prompt):
     agent_response = agent.run(client_prompt)
@@ -22,12 +23,13 @@ def post_prompt(request):
         agent_name = body["agent"]
         client_prompt = body["prompt"]
         client_id = body["clientId"]
+        agent_options = body["agentOptions"]
 
         agent_constructor = available_agents.get(agent_name)
         if agent_constructor == None:
             return HttpResponseNotFound("Agent not found")
         
-        agent = agent_constructor(client_id)
+        agent = agent_constructor(client_id, client_prompt, agent_options)
         agent_response = get_agent_response(agent, client_prompt)
 
         return JsonResponse({
@@ -39,7 +41,7 @@ def post_prompt(request):
         return HttpResponseForbidden("Forbidden")
     
     except Exception as e:
-        print("Error in handler:", e)
+        traceback.print_exc()
         return JsonResponse({
             "agentResponse": "Lo siento, en este momento no me encuentro disponible. Intentalo de nuevo más tarde",
         })
