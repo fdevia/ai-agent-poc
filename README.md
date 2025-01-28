@@ -31,12 +31,43 @@ The agent has a knowledge base to store the information that is scraped from the
 > 🤖 **Coming Soon:** More agent examples will be added in the future
 
 # Run the project on your machine
-As a prerequisite you need to have Node JS installed on your computer, and Metamask installed on your browser.
+## Prerequisites
+As a prerequisite you need to have Python and Postgres installed on your computer. Additionally you need a valid API key for Open AI or Groq (llama) which are the supported LLMs. To create accounts and API keys in this tools please refer to:
+- [https://groq.com/](https://groq.com/)
+- [https://openai.com/](https://openai.com/)
 
-Install dependencies
+
+## Create database
 ```shell
-npm i
+docker run -d \
+  -e POSTGRES_DB=ai \
+  -e POSTGRES_USER=ai \
+  -e POSTGRES_PASSWORD=ai \
+  -e PGDATA=/var/lib/postgresql/data/pgdata \
+  -v pgvolume:/var/lib/postgresql/data \
+  -p 5532:5432 \
+  --name pgvector \
+  phidata/pgvector:16
+
 ```
+
+## Create environmental variables
+Create a .env file in the root of the project with the following information
+```txt
+API_KEY=wenas
+PACO_AI_MODEL=<GPT/LLAMA>
+WEBY_AI_MODEL=<GPT/LLAMA>
+OPENAI_API_KEY=<Open AI Api Key if you have one>
+OPENAI_API_KEY=<Groq Api Key if you have one>
+```
+
+## Install dependencies
+```shell
+python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+```
+
+## Run server
+```python manage.py runserver```
 
 # Author
 
