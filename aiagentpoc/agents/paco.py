@@ -43,7 +43,7 @@ def define_agent():
     return model
 
 
-def get_paco(client_id):
+def get_paco(client_id, propmt, options):
     model = define_agent()
 
     return Agent(
