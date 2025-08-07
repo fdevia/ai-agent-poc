@@ -11,28 +11,45 @@ from phi.memory.db.sqlite import SqliteMemoryDb
 """
 Returns a list of product dictionaries.
 
-    Each dictionary contains details about a specific product, including its SKU, brand, material, design, size, 
-    description, color, and price. This function simulates a database or API call to retrieve product data.
+    This function retrieves product data from the API. Each product contains basic information about
+    available items in the inventory.
 
     Returns:
         list: A list of dictionaries, each representing a product. Each dictionary contains the following keys:
-            - "sku" (str): The unique stock keeping unit identifier of the product.
-            - "padre" (str): The identifier of the parent product or category.
-            - "marca" (str): The brand of the product.
-            - "material" (str): The material used for the product.
-            - "diseno" (str): The design type of the product.
-            - "detallecolor" (str): The specific color detail of the product.
-            - "aro" (str): The size of the frame or item (for eyewear, for example).
-            - "puente" (str): The bridge size (for eyewear).
-            - "vertical" (str): The vertical size of the product.
-            - "genero" (str): The gender category for the product (e.g., "MUJER" for women).
-            - "qty" (str): The quantity available for the product.
-            - "descripcion" (str): A brief description of the product.
-            - "color" (str): The color of the product.
-            - "precioventa" (str): The retail price of the product.
+            - "_id" (str): The unique identifier of the product in the database.
+            - "codeCompany" (str): The company's internal product code.
+            - "codeFacebook" (str): The Facebook catalog identifier for the product.
+            - "title" (str): The name or title of the product.
+            - "stock" (int): The current quantity available in inventory.
 """
 def get_catalog():
-    response = requests.get("https://gist.githubusercontent.com/fdevia/006cd15217844493eba46be7095a7891/raw/4203f3e684b9463ab05ce13df6ac53f6dbfc29e9/productosopticas.json").json()
+    response = requests.get("https://chatbotlogisticsone-fb340de3b466.herokuapp.com/api/products/get-products").json()
+    return json.dumps(response)
+
+"""
+This tool allows you to make a purchase.
+
+The payload must have the following structure:
+
+{
+    "user_id": "573004654173",
+    "items": [
+        {
+            "codeCompany": "005122",
+            "quantity": 2
+        }
+    ]
+}
+
+Arguments:
+    payload (dict): A dictionary with the keys:
+        - user_id (str): The ID of the user making the purchase.
+        - items (list): A list of items, each with:
+            - codeCompany (str): The product code.
+            - quantity (int): The quantity to purchase.
+"""
+def create_purchase(payload):
+    response = requests.post("https://chatbotlogisticsone-fb340de3b466.herokuapp.com/api/orders/create-order", json=payload).json()
     return json.dumps(response)
 
 def define_agent():
@@ -52,7 +69,7 @@ def get_paco(client_id, propmt, options):
         show_tool_calls=True,
         debug_mode=True,
         # Training config
-        tools=[get_catalog],
+        tools=[get_catalog, create_purchase],
         description="You are a helpful assistant that always responds in a polite, upbeat and positive manner.",
         instructions= [
             "You should always respond in spanish",
@@ -61,6 +78,7 @@ def get_paco(client_id, propmt, options):
             "You are an assitant in an optic center", 
             "You are able to answer questions about the available products on the optic center"
             "If you get questions about the product catalog you can use the get_catalog tool to obtain the list of available products in the optic center",
+            "If the users asks you to make a puchase you can use the tool create_purchase to make the purchase on behalf of the user"
             "If the client wishes to end the conversation or return to the previous menu, you should reply END_CONVERSATION without anything else"
             "If the client wishes to talk to a human agent, you should reply HUMAN_AGENT_REQUESTED without anything else"
         ],
