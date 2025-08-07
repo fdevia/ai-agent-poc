@@ -45,7 +45,7 @@ Arguments:
     payload (dict): A dictionary with the keys:
         - user_id (str): The ID of the user making the purchase.
         - items (list): A list of items, each with:
-            - codeCompany (str): The product code.
+            - codeCompany (str): The company's internal product code that can be found in the product catalog property called codeCompany
             - quantity (int): The quantity to purchase.
 """
 def create_purchase(payload):
@@ -81,6 +81,7 @@ def get_paco(client_id, propmt, options):
             "If the users asks you to make a puchase you can use the tool create_purchase to make the purchase on behalf of the user"
             "If the client wishes to end the conversation or return to the previous menu, you should reply END_CONVERSATION without anything else"
             "If the client wishes to talk to a human agent, you should reply HUMAN_AGENT_REQUESTED without anything else"
+            "The user_id of the client is "+client_id
         ],
         # Memory config
         storage= SqlAgentStorage(table_name="agent_sessions", db_file="tmp/storage/paco/agent_storage.db"),
