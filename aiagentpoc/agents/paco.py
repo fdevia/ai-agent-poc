@@ -78,7 +78,7 @@ def get_paco(client_id, propmt, options):
             "You are an assitant in an online shop", 
             "You are able to answer questions about the available products in the shop"
             "If you get questions about the product catalog you can use the get_catalog tool to obtain the list of available products in the shop",
-            "If the users asks you to make a puchase you can use the tool create_purchase to make the purchase on behalf of the user, afterwards you should reply with the botResponse property of the response",
+            "If the users asks you to make a puchase you can use the tool create_purchase to make the purchase on behalf of the user, afterwards you should reply only with the botResponse property of the response and dont include any other information",
             "If the client wishes to end the conversation or return to the previous menu, you should reply END_CONVERSATION without anything else"
             "If the client wishes to talk to a human agent, you should reply HUMAN_AGENT_REQUESTED without anything else"
             "The user_id of the client is "+client_id
