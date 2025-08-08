@@ -47,6 +47,28 @@ Arguments:
         - items (list): A list of items, each with:
             - codeCompany (str): The company's internal product code that can be found in the product catalog property called codeCompany
             - quantity (int): The quantity to purchase.
+
+Returns:
+    str: A JSON string containing:
+        - success (bool): Indicates if the purchase was successful.
+        - botResponse (str): A formatted string containing the order details including:
+            * Order number
+            * Customer name
+            * Delivery address
+            * Item details (quantity, price, code, description)
+            * Total amount in COP
+            Example botResponse format:
+            "#️⃣ *Pedido 1121 Recibido*
+             👤 Customer Name
+             📍 Delivery Address
+             _____________________________
+             Cant.   Valor S/      Código
+             _____________________________
+             2       50000.00      005122
+                     Product Description
+             _____________________________
+             
+             TOTAL COP/:  50000.00"
 """
 def create_purchase(payload):
     response = requests.post("https://chatbotlogisticsone-fb340de3b466.herokuapp.com/api/orders/create-order", json=payload).json()
@@ -78,7 +100,7 @@ def get_paco(client_id, propmt, options):
             "You are an assitant in an online shop", 
             "You are able to answer questions about the available products in the shop"
             "If you get questions about the product catalog you can use the get_catalog tool to obtain the list of available products in the shop",
-            "If the users asks you to make a puchase you can use the tool create_purchase to make the purchase on behalf of the user, afterwards you should reply only with the botResponse property of the response and dont include any other information",
+            "If the users asks you to make a purchase you can use the tool create_purchase to make the purchase on behalf of the user. After calling create_purchase, you must ONLY extract and return the 'botResponse' property from the JSON response. Do not add any greetings, explanations, or additional text - return ONLY the botResponse value",
             "If the client wishes to end the conversation or return to the previous menu, you should reply END_CONVERSATION without anything else"
             "If the client wishes to talk to a human agent, you should reply HUMAN_AGENT_REQUESTED without anything else"
             "The user_id of the client is "+client_id
